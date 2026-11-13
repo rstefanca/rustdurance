@@ -1,6 +1,6 @@
 use crate::dto::booking_request::{EnduranceVendorBooking, VendorGuest};
 use crate::error::PluginError;
-use crate::plugin::guest::{Guest, GuestInfo};
+use crate::plugin::guest::Guest;
 use crate::plugin::guests::Guests;
 use crate::plugin::pax_type::PaxType;
 use crate::plugin::plugin::FeatureKind::Booking;
@@ -72,9 +72,11 @@ impl BookingRequestImpl {
                 first_name: "dfq".to_string(),
                 last_name: "dfd".to_string(),
                 pax_type: "Adult".into(),
+                phone_number: None,
+                email: None,
+                custom_fields: Vec::new(),
             })
             .collect::<Vec<Guest>>();
-
 
        let pax_numbers = delegate.guest_numbers_map.iter()
            .map(|(k,v)| (PaxType::from(k.as_str()), *v))
@@ -85,7 +87,7 @@ impl BookingRequestImpl {
     }
 
     //delegate
-    fn main_guest(&self) -> &dyn GuestInfo {
+    fn main_guest(&self) -> &Guest {
         self.guests.main_guest()
     }
 }

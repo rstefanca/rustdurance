@@ -6,6 +6,7 @@ use async_trait::async_trait;
 use crate::dto::booking_response::{BookingResponse, Ticket};
 use crate::dto::utils::booking_response;
 use crate::error::PluginError;
+use crate::plugin::pax_type::PaxType;
 use crate::plugin::plugin::{BookingPluginFeature, BookingRequest, EndurancePlugin, PluginFeature};
 
 
@@ -50,6 +51,8 @@ impl BookingPluginFeature for  DummyBooking  {
         booking_request: &dyn BookingRequest,
     ) -> Result<BookingResponse, PluginError> {
         let _ = self.plugin.api.get_products();
+        let guests = booking_request.guests();
+        let _adults = &guests[PaxType::from("ADULT")];
 
         let tickets: Vec<Ticket> = Vec::new();
         Ok(booking_response("1", tickets))
