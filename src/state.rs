@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::plugin::dummy::dummy_plugin::{dummy_plugin, DummyPlugin};
-use crate::plugin::plugin::{EndurancePlugin};
-use crate::service::booking_service::{PluginService, BookingService};
+use crate::plugin::dummy::dummy_plugin::dummy_plugin;
+use crate::plugin::plugin::EndurancePlugin;
+use crate::service::booking_service::{BookingService, PluginService};
 
 /// Shared application state; the Rust counterpart of Spring's injected beans.
 #[derive(Clone)]

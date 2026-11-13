@@ -10,6 +10,8 @@ use tokio::net::TcpListener;
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt::init();
+    
     let addr = std::env::var("BIND_ADDR").unwrap_or_else(|_| "0.0.0.0:3000".to_string());
     let listener = TcpListener::bind(&addr)
         .await

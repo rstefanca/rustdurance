@@ -3,16 +3,15 @@ use std::collections::HashMap;
 
 use async_trait::async_trait;
 
-use crate::dto::booking_request::EnduranceVendorBooking;
 use crate::dto::booking_response::{BookingResponse, Ticket};
 use crate::dto::utils::booking_response;
 use crate::error::PluginError;
-use crate::plugin::plugin::{BookingPluginFeature, EndurancePlugin, PluginFeature};
+use crate::plugin::guests::{Guest, PaxType};
+use crate::plugin::plugin::{BookingPluginFeature, BookingRequest, EndurancePlugin, PluginFeature};
 
 
 pub struct DummyPlugin {
-    api: DummyApi
-    
+    api: DummyApi,
 }
 
 pub struct DummyApi {
@@ -51,9 +50,11 @@ impl DummyBooking {
 impl BookingPluginFeature for  DummyBooking  {
     async fn book(
         &self,
-        _booking_request: EnduranceVendorBooking,
+        booking_request: &dyn BookingRequest,
     ) -> Result<BookingResponse, PluginError> {
         let _ = self.plugin.api.get_products();
+        let guests = booking_request.guests();
+        let _adults = guests[PaxType::from("ADULT")].iter();
         let tickets: Vec<Ticket> = Vec::new();
         Ok(booking_response("1", tickets))
     }

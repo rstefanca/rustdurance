@@ -38,9 +38,9 @@ pub struct AMEnduranceBookingRequest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EnduranceVendorBooking {
-    pub booking_id: i32,
-    pub vendor_id: i64,
-    pub tour_id: i32,
+    pub booking_id: u32,
+    pub vendor_id: u64,
+    pub tour_id: u32,
     pub inventory_date: NaiveDate,
     pub inventory_time: NaiveTime,
     pub product_name: String,
@@ -48,9 +48,9 @@ pub struct EnduranceVendorBooking {
     pub product_code: String,
     pub primary_guest: VendorPrimaryGuest,
     /// Pax type (e.g. "ADULT") -> number of guests.
-    pub guest_numbers_map: HashMap<String, i32>,
+    pub guest_numbers_map: HashMap<String, u16>,
     #[serde(default)]
-    pub guests: Option<Vec<VendorGuest>>,
+    pub guests: Vec<VendorGuest>,
     #[serde(default)]
     pub hotel_name: Option<String>,
     #[serde(default)]
@@ -77,12 +77,6 @@ pub struct EnduranceVendorBooking {
     pub failure_callback_url: Option<String>,
     #[serde(default)]
     pub fulfilment_id: Option<i64>,
-}
-
-impl EnduranceVendorBooking {
-    fn guest_count(&self) -> i32 {
-        self.guest_numbers_map.values().sum()
-    }
 }
 
 /// Kotlin: `com.headout.vendor.api.models.VendorPrimaryGuest`.
