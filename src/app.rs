@@ -1,4 +1,5 @@
 use axum::{Router, routing::get};
+use tower_http::catch_panic::CatchPanicLayer;
 
 use crate::{controller, state::AppState};
 
@@ -7,6 +8,7 @@ pub fn router() -> Router {
     Router::new()
         .route("/ping", get(ping))
         .merge(controller::booking_controller_v2::routes())
+        .layer(CatchPanicLayer::new())
         .with_state(AppState::new())
 }
 

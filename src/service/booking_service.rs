@@ -1,6 +1,8 @@
 use crate::dto::booking_request::{EnduranceVendorBooking, VendorGuest};
 use crate::error::PluginError;
-use crate::plugin::guests::{Guest, Guests, PaxType};
+use crate::plugin::guest::{Guest, GuestInfo};
+use crate::plugin::guests::Guests;
+use crate::plugin::pax_type::PaxType;
 use crate::plugin::plugin::FeatureKind::Booking;
 use crate::plugin::plugin::{BookingRequest, EndurancePlugin};
 pub(crate) use crate::service::plugin_service::PluginService;
@@ -62,7 +64,7 @@ struct BookingRequestImpl {
 
 impl BookingRequestImpl {
     fn new(delegate: EnduranceVendorBooking) -> Self {
-        let list = delegate
+        let list = &mut delegate
             .guests
             .clone()
             .iter()
@@ -73,13 +75,18 @@ impl BookingRequestImpl {
             })
             .collect::<Vec<Guest>>();
 
-        let guests = Guests::new(list);
+
+       let pax_numbers = delegate.guest_numbers_map.iter()
+           .map(|(k,v)| (PaxType::from(k.as_str()), *v))
+           .collect();
+
+        let guests = Guests::new(list.clone(), pax_numbers);
         Self { delegate, guests }
     }
 
     //delegate
-    fn main_guest(&self) -> &Guest {
-        &self.guests.main_guest()
+    fn main_guest(&self) -> &dyn GuestInfo {
+        self.guests.main_guest()
     }
 }
 

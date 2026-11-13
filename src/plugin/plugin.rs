@@ -5,7 +5,8 @@ use crate::error::PluginError;
 use crate::plugin::plugin::PluginFeature::{Booking, Inventory};
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use crate::plugin::guests::{Guest, Guests};
+use crate::plugin::guest::Guest;
+use crate::plugin::guests::Guests;
 
 pub enum PluginFeature {
     Booking(Box<dyn BookingPluginFeature>),
