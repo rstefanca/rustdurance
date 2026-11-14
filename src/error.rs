@@ -7,6 +7,8 @@ use serde::Serialize;
 use thiserror::Error;
 use crate::plugin::plugin::FeatureKind;
 
+// check https://github.com/rust10x/rust10x/blob/main/pack/samples/event-design/src/event_base/event_base_error.rs
+
 #[derive(Debug, Error)]
 pub enum AppError {
     /// Placeholder for logic that has not been ported from Endurance yet.

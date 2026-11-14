@@ -2,11 +2,12 @@ use std::fmt::{Debug, Formatter};
 
 use crate::dto::booking_response::BookingResponse;
 use crate::error::PluginError;
+use crate::plugin::guests::Guests;
 use crate::plugin::plugin::PluginFeature::{Booking, Inventory};
 use async_trait::async_trait;
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
-use crate::plugin::guest::Guest;
-use crate::plugin::guests::Guests;
+
+pub type BookingResult = Result<BookingResponse, PluginError>;
 
 pub enum PluginFeature {
     Booking(Box<dyn BookingPluginFeature>),
@@ -75,7 +76,7 @@ impl EndurancePlugin {
     pub async fn book(
         &self,
         booking_request: &dyn BookingRequest,
-    ) -> Result<BookingResponse, PluginError> {
+    ) -> BookingResult {
         for feature in &self.features {
             if let Booking(booking_feature) = feature {
                 return booking_feature.book(booking_request).await;

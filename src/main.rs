@@ -2,6 +2,9 @@ mod app;
 mod controller;
 mod dto;
 mod error;
+mod event;
+mod event_bus;
+mod listener;
 mod service;
 mod state;
 pub mod plugin;
@@ -18,7 +21,10 @@ async fn main() {
         .unwrap_or_else(|e| panic!("failed to bind {addr}: {e}"));
     println!("listening on {addr}");
 
-    axum::serve(listener, app::router())
+    let state = state::AppState::new();
+    listener::spawn_all(&state.event_bus);
+
+    axum::serve(listener, app::router_with(state))
         .with_graceful_shutdown(shutdown_signal())
         .await
         .expect("server error");

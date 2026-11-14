@@ -3,13 +3,21 @@ use tower_http::catch_panic::CatchPanicLayer;
 
 use crate::{controller, state::AppState};
 
-/// Builds the application router. Kept separate from `main` so tests can drive it directly.
+/// Builds the application router with fresh state. Kept separate from `main` so tests
+/// can drive it directly.
+#[cfg(test)]
 pub fn router() -> Router {
+    router_with(AppState::new())
+}
+
+/// Builds the application router around existing state, so `main` can start event
+/// listeners on `state.event_bus` first.
+pub fn router_with(state: AppState) -> Router {
     Router::new()
         .route("/ping", get(ping))
         .merge(controller::booking_controller_v2::routes())
         .layer(CatchPanicLayer::new())
-        .with_state(AppState::new())
+        .with_state(state)
 }
 
 async fn ping() -> &'static str {
